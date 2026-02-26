@@ -58,7 +58,9 @@ def check_bond_length_equilibration(snap,num_mon,num_pol,max_bond_length=1.1,min
     for j in range(num_pol):
         idx = j*num_mon
         d1 = snap.particles.position[idx:idx+num_mon-1] - snap.particles.position[idx+1:idx+num_mon]
-        bond_l = np.linalg.norm(pbc(d1,snap.configuration.box),axis=1)
+        L = snap.configurations.box[0]
+        d1 -= L*np.round(d1/L)
+        bond_l = np.linalg.norm(d1,axis=1)
         frame_ds.append(bond_l)
     max_frame_bond_l = np.max(np.array(frame_ds))
     min_frame_bond_l = np.min(np.array(frame_ds))
